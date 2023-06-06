@@ -13,14 +13,15 @@ datasource db {
 }
 
 model User {
-  id              String           @id @default(uuid())
-  age             Int?
-  name            String
-  email           String           @unique
-  role            Role             @default(USER)
-  writtenPosts    Post[]           @relation("WrittenPosts")
-  favoritePosts   Post[]           @relation("FavoritePosts")
-  userPreferences UserPreferences?
+  id               String          @id @default(uuid())
+  age              Int?
+  name             String
+  email            String          @unique
+  role             Role            @default(USER)
+  writtenPosts     Post[]          @relation("WrittenPosts")
+  favoritePosts    Post[]          @relation("FavoritePosts")
+  userPreference   UserPreference? @relation(fields: [userPreferenceId], references: [id])
+  userPreferenceId String?         @unique
   // isAdmin         Boolean          @default(false)
   // preferences     Jsons
   // unsupported Unsupported("")
@@ -32,11 +33,10 @@ model User {
 }
 
 // one to one = user has table preferences, each user has one references in preferences table and each preferences has one user link to user table
-model UserPreferences {
+model UserPreference {
   id           String  @id @default(uuid())
   emailUpdates Boolean
-  user         User    @relation(fields: [userId], references: [id])
-  userId       String  @unique
+  user         User?
 }
 
 // one to many = post has one author, user has many posts
